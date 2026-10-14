@@ -56,7 +56,8 @@ export int cmd_toolchain(const mcpplibs::cmdline::ParsedArgs& parsed) {
         return mcpp::toolchain::toolchain_set_default(
             *cfg, sub_parsed.positional(0), sub_parsed.positional(1), targetArg);
     if (subname == "remove")
-        return mcpp::toolchain::toolchain_remove(*cfg, sub_parsed.positional(0), targetArg);
+        return mcpp::toolchain::toolchain_remove(
+            *cfg, sub_parsed.positional(0), sub_parsed.positional(1), targetArg);
 
     mcpp::ui::error(std::format("unknown toolchain subcommand '{}'", subname));
     return 2;

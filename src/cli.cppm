@@ -795,7 +795,12 @@ int run(int argc, char** argv) {
                     "Default build target <triple> (omit = host)")))
             .subcommand(cl::App("remove")
                 .description("Uninstall a toolchain")
-                .arg(cl::Arg("spec").help("<family>@<version>").required())
+                // Match `default`: accept either `gcc@16.1.0` or `gcc 16.1.0`.
+                // Partial-version spelling follows `default` too.
+                .arg(cl::Arg("spec")
+                    .help("<family>[@<version>] (version may be partial)")
+                    .required())
+                .arg(cl::Arg("version").help("(optional, alternative to @-form)"))
                 .option(cl::Option("target").takes_value().help(
                     "Remove the payload for <triple> instead of the host one")))
             .action(wrap_rc(cmd_toolchain)))

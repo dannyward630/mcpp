@@ -1269,9 +1269,10 @@ export int toolchain_set_default(const mcpp::config::GlobalConfig& cfg,
 // `mcpp toolchain remove <spec> [--target <triple>]` — uninstall a payload.
 export int toolchain_remove(const mcpp::config::GlobalConfig& cfg,
                             const std::string& pos0,
+                            const std::string& pos1,
                             const std::string& targetArg = {}) {
     auto xlEnv = mcpp::config::make_xlings_env(cfg);
-        auto parsedSpec = mcpp::toolchain::parse_toolchain_spec(pos0);
+        auto parsedSpec = mcpp::toolchain::parse_toolchain_spec(pos0, pos1);
         if (parsedSpec && mcpp::toolchain::is_system_toolchain(*parsedSpec)) {
             mcpp::ui::error(
                 "msvc@system is the machine's own Visual Studio, managed by the "
@@ -1281,7 +1282,8 @@ export int toolchain_remove(const mcpp::config::GlobalConfig& cfg,
             return 1;
         }
         if (!parsedSpec || parsedSpec->version.empty()) {
-            mcpp::ui::error(std::format("invalid spec '{}'", pos0));
+            const auto input = pos1.empty() ? pos0 : std::format("{} {}", pos0, pos1);
+            mcpp::ui::error(std::format("invalid spec '{}'", input));
             return 2;
         }
         mcpp::toolchain::print_compat_hint(*parsedSpec);
