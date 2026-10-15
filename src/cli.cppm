@@ -795,10 +795,12 @@ int run(int argc, char** argv) {
                     "Default build target <triple> (omit = host)")))
             .subcommand(cl::App("remove")
                 .description("Uninstall a toolchain")
-                // Match `default`: accept either `gcc@16.1.0` or `gcc 16.1.0`.
-                // Partial-version spelling follows `default` too.
+                // Same dual-form as `default`: `gcc@16.1.0` or `gcc 16.1.0`.
+                // NOT partial versions: `default` resolves `gcc 15` to the
+                // highest installed 15.x.y, but a removal must name the one
+                // payload it deletes, so the version here is exact.
                 .arg(cl::Arg("spec")
-                    .help("<family>[@<version>] (version may be partial)")
+                    .help("<family>[@<version>] (exact version)")
                     .required())
                 .arg(cl::Arg("version").help("(optional, alternative to @-form)"))
                 .option(cl::Option("target").takes_value().help(
